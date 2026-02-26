@@ -8,6 +8,7 @@ use Hayabusa\Container\Container;
 use Hayabusa\Http\Request;
 use Hayabusa\Http\Response;
 use Hayabusa\Http\Router;
+use Hayabusa\Exceptions\HttpException;
 
 class Application
 {
@@ -75,7 +76,11 @@ class Application
 
     public function handle(Request $request): Response
     {
-        return $this->router->dispatch($request);
+        try {
+            return $this->router->dispatch($request);
+        } catch (HttpException $e) {
+            return Response::json(['error' => $e->getMessage()], $e->statusCode());
+        }
     }
 
     public function run(): void
