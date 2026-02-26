@@ -71,4 +71,14 @@ class Response
     {
         return $this->data;
     }
+
+    public function getStatusCode(): int
+    {
+        return $this->status;
+    }
+
+    public function getBody(): string
+    {
+        return json_encode($this->data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    }
 }

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Hayabusa\Http;
 
-use Hayabusa\Exceptions\HttpException;
-
 class Router
 {
     private array $routes = [];
@@ -55,7 +53,7 @@ class Router
             }
         }
 
-        throw new HttpException(404, 'Route not found');
+        return Response::json(['error' => 'Route not found'], 404);
     }
 
     // ── Internal ────────────────────────────────────────────

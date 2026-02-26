@@ -53,6 +53,12 @@ class Route
             return $handler($request);
         }
 
+        // 'ControllerClass' con __invoke
+        if (is_string($handler) && class_exists($handler)) {
+            $controller = \Hayabusa\Application::getInstance()->make($handler);
+            return $controller($request);
+        }
+
         // [Controller::class, 'method']
         if (is_array($handler)) {
             [$class, $method] = $handler;
