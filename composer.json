@@ -1,0 +1,61 @@
+{
+    "name": "hayabusa/framework",
+    "description": "High-performance PHP framework for APIs — Swoole, Clean Architecture, Bounded Contexts & AI ready.",
+    "keywords": [
+        "php",
+        "framework",
+        "api",
+        "swoole",
+        "ddd",
+        "hexagonal",
+        "bounded-contexts",
+        "ai"
+    ],
+    "homepage": "https://github.com/abrito393/hayabusa",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Aquiles Brito",
+            "email": "abritodev@gmail.com",
+            "role": "Creator"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "ext-json": "*",
+        "ext-mbstring": "*"
+    },
+    "require-dev": {
+        "pestphp/pest": "^2.0",
+        "pestphp/pest-plugin-arch": "^2.0",
+        "mockery/mockery": "^1.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "Hayabusa\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Hayabusa\\Tests\\": "tests/"
+        }
+    },
+    "bin": [
+        "bin/hayabusa"
+    ],
+    "scripts": {
+        "test": "./vendor/bin/pest",
+        "test:coverage": "./vendor/bin/pest --coverage --min=80",
+        "test:arch": "./vendor/bin/pest --filter=arch"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
