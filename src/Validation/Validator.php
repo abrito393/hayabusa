@@ -10,6 +10,21 @@ use Hayabusa\Validation\Rules\Required;
 use Hayabusa\Validation\Rules\Email;
 use Hayabusa\Validation\Rules\MinLength;
 use Hayabusa\Validation\Rules\MaxLength;
+use Hayabusa\Validation\Rules\Integer;
+use Hayabusa\Validation\Rules\Numeric;
+use Hayabusa\Validation\Rules\Regex;
+use Hayabusa\Validation\Rules\In;
+use Hayabusa\Validation\Rules\NotIn;
+use Hayabusa\Validation\Rules\Between;
+use Hayabusa\Validation\Rules\Url;
+use Hayabusa\Validation\Rules\Ip;
+use Hayabusa\Validation\Rules\Uuid;
+use Hayabusa\Validation\Rules\Date;
+use Hayabusa\Validation\Rules\Accepted;
+use Hayabusa\Validation\Rules\Alpha;
+use Hayabusa\Validation\Rules\AlphaNumeric;
+use Hayabusa\Validation\Rules\Slug;
+use Hayabusa\Validation\Rules\Json;
 
 class Validator
 {
@@ -68,6 +83,8 @@ class Validator
             return $rule;
         }
 
+        // ── Reglas con parámetros ────────────────────────────────
+
         if (str_starts_with($rule, 'min:')) {
             return new MinLength((int) substr($rule, 4));
         }
@@ -76,9 +93,45 @@ class Validator
             return new MaxLength((int) substr($rule, 4));
         }
 
+        if (str_starts_with($rule, 'between:')) {
+            [$min, $max] = explode(',', substr($rule, 8), 2);
+            return new Between((float) trim($min), (float) trim($max));
+        }
+
+        if (str_starts_with($rule, 'in:')) {
+            $values = array_map('trim', explode(',', substr($rule, 3)));
+            return new In(...$values);
+        }
+
+        if (str_starts_with($rule, 'not_in:')) {
+            $values = array_map('trim', explode(',', substr($rule, 7)));
+            return new NotIn(...$values);
+        }
+
+        if (str_starts_with($rule, 'date:')) {
+            return new Date(substr($rule, 5));
+        }
+
+        if (str_starts_with($rule, 'regex:')) {
+            return new Regex(substr($rule, 6));
+        }
+
+        // ── Reglas simples ───────────────────────────────────────
+
         return match ($rule) {
             'required' => new Required(),
             'email' => new Email(),
+            'integer' => new Integer(),
+            'numeric' => new Numeric(),
+            'url' => new Url(),
+            'ip' => new Ip(),
+            'uuid' => new Uuid(),
+            'date' => new Date(),
+            'accepted' => new Accepted(),
+            'alpha' => new Alpha(),
+            'alpha_num' => new AlphaNumeric(),
+            'slug' => new Slug(),
+            'json' => new Json(),
             default => throw new \InvalidArgumentException("Unknown rule: {$rule}"),
         };
     }
