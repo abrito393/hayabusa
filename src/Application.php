@@ -9,6 +9,7 @@ use Hayabusa\Http\Request;
 use Hayabusa\Http\Response;
 use Hayabusa\Http\Router;
 use Hayabusa\Exceptions\HttpException;
+use Hayabusa\Database\DatabaseManager;
 
 class Application
 {
@@ -88,5 +89,11 @@ class Application
         $request = Request::fromGlobals();
         $response = $this->handle($request);
         $response->send();
+    }
+
+    public function withDatabase(array $config, string $name = 'default'): static
+    {
+        DatabaseManager::getInstance()->addConfig($name, $config);
+        return $this;
     }
 }
