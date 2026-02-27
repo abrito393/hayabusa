@@ -10,10 +10,13 @@ use Hayabusa\Http\Response;
 use Hayabusa\Http\Router;
 use Hayabusa\Exceptions\HttpException;
 use Hayabusa\Database\DatabaseManager;
+use Hayabusa\Http\Middleware\MiddlewareInterface;
+use Hayabusa\Http\Middleware\MiddlewarePipeline;
 
 class Application
 {
     private static ?Application $instance = null;
+    private array $middleware = [];
 
     public function __construct(
         private readonly Container $container,
@@ -78,7 +81,14 @@ class Application
     public function handle(Request $request): Response
     {
         try {
-            return $this->router->dispatch($request);
+            $core = fn(Request $req) => $this->router->dispatch($req);
+
+            $pipeline = new MiddlewarePipeline();
+            foreach ($this->middleware as $mw) {
+                $pipeline->pipe($mw);
+            }
+
+            return $pipeline->run($request, $core);
         } catch (HttpException $e) {
             return Response::json(['error' => $e->getMessage()], $e->statusCode());
         }
@@ -96,4 +106,12 @@ class Application
         DatabaseManager::getInstance()->addConfig($name, $config);
         return $this;
     }
+
+    public function addMiddleware(MiddlewareInterface $middleware): static
+    {
+        $this->middleware[] = $middleware;
+        return $this;
+    }
+
+
 }

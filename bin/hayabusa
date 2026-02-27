@@ -1,0 +1,15 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+require __DIR__ . '/vendor/autoload.php';
+
+use Hayabusa\Console\Kernel;
+
+$kernel = new Kernel();
+
+// Registrar comandos aquí cuando se configure el proyecto
+// $kernel->register(new MigrateCommand($runner, $migrations));
+
+exit($kernel->handle($argv));
